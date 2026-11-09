@@ -1,0 +1,10 @@
+<Project>
+  <!-- A plugin is its own repository. This file keeps build settings from parent folders out:
+       its presence stops the search for a parent Directory.Build.props, and the two properties
+       stop a parent Directory.Build.targets and Directory.Packages.props (central package
+       management) from being imported. -->
+  <PropertyGroup>
+    <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
+    <ImportDirectoryPackagesProps>false</ImportDirectoryPackagesProps>
+  </PropertyGroup>
+</Project>

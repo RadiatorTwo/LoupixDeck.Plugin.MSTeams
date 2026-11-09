@@ -1,0 +1,19 @@
+name: Release
+
+# Builds the plugin and attaches the Plugin Store files (<id>-<version>-<platform>.zip,
+# plugin.json, SHA256SUMS) to the published release. The release tag must be v<version>
+# from plugin.json.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: RadiatorTwo/LoupixDeck.PluginSdk/.github/workflows/plugin-release.yml@master
+    with:
+      project: LoupixDeck.Plugin.MSTeams.csproj
+      build-sdk: false  # LoupixDeck.PluginSdk is restored from nuget.org

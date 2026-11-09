@@ -1,0 +1,12 @@
+{
+  "id": "msteams",
+  "name": "MSTeams",
+  "version": "1.0.0",
+  "sdkVersion": "1.36",
+  "entryAssembly": "LoupixDeck.Plugin.MSTeams.dll",
+  "platform": "All",
+  "author": "",
+  "description": "",
+  "projectUrl": "",
+  "iconFile": ""
+}

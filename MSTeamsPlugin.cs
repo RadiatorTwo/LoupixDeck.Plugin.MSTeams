@@ -26,8 +26,23 @@ public sealed class MSTeamsPlugin : LoupixPlugin, IPluginSettingsPage, IPluginRe
         Version = new Version(0, 1, 0),
         SdkVersion = SdkInfo.Version,
         Author = "RadiatorTwo",
-        Description = "Control Microsoft Teams meetings with live state."
+        Description = "Control Microsoft Teams meetings with live state.",
+        Icon = LoadIcon()
     };
+
+    /// <summary>The plugin icon (icon.png, embedded). Missing data only costs the icon.</summary>
+    private static byte[]? LoadIcon()
+    {
+        using Stream? stream = typeof(MSTeamsPlugin).Assembly.GetManifestResourceStream("LoupixDeck.Plugin.MSTeams.icon.png");
+        if (stream is null)
+        {
+            return null;
+        }
+
+        using MemoryStream buffer = new();
+        stream.CopyTo(buffer);
+        return buffer.ToArray();
+    }
 
     public override void Initialize(IPluginHost host)
     {

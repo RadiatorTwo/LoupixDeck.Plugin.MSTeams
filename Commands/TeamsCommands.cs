@@ -69,14 +69,16 @@ internal sealed class TeamsReactionCommand(string reaction, string displayName, 
 
 /// <summary>
 /// Leaves the meeting. With confirmation enabled (the default), the first press arms the command
-/// and only a second press within <see cref="ConfirmWindow"/> leaves.
+/// — the button switches to its <see cref="TeamsStates.Confirm"/> state — and only a second press
+/// within <see cref="ConfirmWindow"/> leaves. Without a second press the button falls back.
 /// </summary>
-internal sealed class TeamsLeaveCommand(TeamsSession session, Func<bool> confirmEnabled) : IPluginCommand
+internal sealed class TeamsLeaveCommand(TeamsSession session, Func<bool> confirmEnabled) : IButtonStateCommand, IDisposable
 {
     private static readonly TimeSpan ConfirmWindow = TimeSpan.FromSeconds(3);
 
     private readonly Lock _gate = new();
     private DateTime _armedUntil = DateTime.MinValue;
+    private Timer? _disarmTimer;
 
     public CommandDescriptor Descriptor { get; } = new()
     {
@@ -85,10 +87,24 @@ internal sealed class TeamsLeaveCommand(TeamsSession session, Func<bool> confirm
         Group = MSTeamsPlugin.GroupName,
         Icon = TeamsStates.HangupGlyph,
         Description = "Hang up (press twice when confirmation is enabled)",
-        ButtonLayout = TeamsStates.ActionLayout(TeamsStates.HangupGlyph, "Leave", alert: true)
+        States = TeamsStates.Leave,
+        ButtonLayout = new ButtonLayoutDescriptor { Mode = ButtonLayoutMode.None }
     };
 
     public ButtonTargets SupportedTargets => ButtonTargets.TouchButton | ButtonTargets.SimpleButton;
+
+    public string? GetButtonState(CommandContext ctx) => IsArmed ? TeamsStates.Confirm : TeamsStates.Ready;
+
+    private bool IsArmed
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return DateTime.UtcNow <= _armedUntil;
+            }
+        }
+    }
 
     public async Task Execute(CommandContext ctx)
     {
@@ -99,16 +115,13 @@ internal sealed class TeamsLeaveCommand(TeamsSession session, Func<bool> confirm
                 return;
             }
 
-            if (confirmEnabled() && !ConsumeArm())
+            if (confirmEnabled() && !ConsumeArm(ctx.Host))
             {
-                if (ctx.Target == ButtonTargets.TouchButton && ctx.SourceIndex is int slot)
-                {
-                    ctx.Host.OverlayTouchText(slot, ctx.Host.Tr("Press again to leave"), ConfirmWindow);
-                }
-
+                RefreshState(ctx.Host);
                 return;
             }
 
+            RefreshState(ctx.Host);
             await session.LeaveAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
@@ -118,11 +131,14 @@ internal sealed class TeamsLeaveCommand(TeamsSession session, Func<bool> confirm
     }
 
     /// <summary>True when the command was armed (second press); otherwise arms it and returns false.</summary>
-    private bool ConsumeArm()
+    private bool ConsumeArm(IPluginHost host)
     {
         lock (_gate)
         {
             DateTime now = DateTime.UtcNow;
+            _disarmTimer?.Dispose();
+            _disarmTimer = null;
+
             if (now <= _armedUntil)
             {
                 _armedUntil = DateTime.MinValue;
@@ -130,7 +146,30 @@ internal sealed class TeamsLeaveCommand(TeamsSession session, Func<bool> confirm
             }
 
             _armedUntil = now + ConfirmWindow;
+            // Fall back to the ready state when no second press comes.
+            _disarmTimer = new Timer(_ => RefreshState(host), null, ConfirmWindow + TimeSpan.FromMilliseconds(50), Timeout.InfiniteTimeSpan);
             return false;
+        }
+    }
+
+    private void RefreshState(IPluginHost host)
+    {
+        try
+        {
+            host.RefreshButtonStates(Descriptor.CommandName);
+        }
+        catch (MissingMethodException)
+        {
+            // Host older than SDK 1.34: no per-button states.
+        }
+    }
+
+    public void Dispose()
+    {
+        lock (_gate)
+        {
+            _disarmTimer?.Dispose();
+            _disarmTimer = null;
         }
     }
 }

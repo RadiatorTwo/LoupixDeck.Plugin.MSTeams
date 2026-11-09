@@ -28,6 +28,10 @@ internal static class TeamsStates
     public const string Idle = "Idle";
     public const string Sharing = "Sharing";
 
+    // Leave meeting (confirmation).
+    public const string Ready = "Ready";
+    public const string Confirm = "Confirm";
+
     public const string GroupGlyph = "\U000F0849"; // mdi-account-group
 
     private const string Foreground = "#FFFFFF";
@@ -36,6 +40,7 @@ internal static class TeamsStates
     private const string EnabledBackground = "#1F6E43";
     private const string HandBackground = "#8A6100";
     private const string TeamsBackground = "#464EB8";
+    private const string ConfirmBackground = "#E8A317";
 
     public const string MicrophoneGlyph = "\U000F036C"; // mdi-microphone
     private const string MicrophoneOffGlyph = "\U000F036D"; // mdi-microphone-off
@@ -83,7 +88,13 @@ internal static class TeamsStates
         State(Sharing, "Sharing the screen", ShareGlyph, "Sharing", AlertBackground)
     ];
 
-    /// <summary>Look of a stateless action key (reactions, leave).</summary>
+    public static IReadOnlyList<ButtonStateDescriptor> Leave { get; } =
+    [
+        State(Ready, "Ready to leave", HangupGlyph, "Leave", AlertBackground),
+        State(Confirm, "Waiting for the second press", HangupGlyph, "Press again", ConfirmBackground)
+    ];
+
+    /// <summary>Look of a stateless action key (reactions).</summary>
     public static ButtonLayoutDescriptor ActionLayout(string glyph, string caption, bool alert = false)
         => Layout(glyph, caption, alert ? AlertBackground : TeamsBackground);
 

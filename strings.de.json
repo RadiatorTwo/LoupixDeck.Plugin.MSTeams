@@ -33,11 +33,12 @@
   "Hand raised": "Hand gehoben",
   "Not sharing": "Nicht geteilt",
   "Sharing the screen": "Bildschirm wird geteilt",
+  "Ready to leave": "Bereit zum Verlassen",
+  "Waiting for the second press": "Wartet auf den zweiten Druck",
 
   "Confirm leaving": "Verlassen bestätigen",
   "Leave Meeting needs a second press within 3 seconds.": "„Besprechung verlassen“ braucht einen zweiten Druck innerhalb von 3 Sekunden.",
   "Check Teams": "Teams prüfen",
-  "Press again to leave": "Nochmal drücken zum Verlassen",
   "Teams is not running": "Teams läuft nicht",
   "Teams is running, no meeting found": "Teams läuft, keine Besprechung gefunden",
   "Meeting found (mic: {0}, camera: {1})": "Besprechung gefunden (Mikrofon: {0}, Kamera: {1})",

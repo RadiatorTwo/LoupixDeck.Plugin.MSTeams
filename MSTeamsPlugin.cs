@@ -64,6 +64,11 @@ public sealed class MSTeamsPlugin : LoupixPlugin, IPluginSettingsPage, IPluginRe
             _session.Dispose();
             _session = null;
         }
+
+        foreach (IDisposable disposable in _commands.OfType<IDisposable>())
+        {
+            disposable.Dispose();
+        }
     }
 
     private void BuildCommands(TeamsSession session)

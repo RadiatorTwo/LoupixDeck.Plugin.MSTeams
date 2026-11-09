@@ -23,7 +23,7 @@ public sealed class MSTeamsPlugin : LoupixPlugin, IPluginSettingsPage, IPluginRe
     {
         Id = "msteams",
         Name = GroupName,
-        Version = new Version(0, 1, 0),
+        Version = new Version(1, 0, 0),
         SdkVersion = SdkInfo.Version,
         Author = "RadiatorTwo",
         Description = "Control Microsoft Teams meetings with live state.",

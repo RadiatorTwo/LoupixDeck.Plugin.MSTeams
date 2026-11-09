@@ -84,6 +84,23 @@ Stable, language-independent ids (Buttons): `like-button` (Gefällt mir), `heart
   (`HKCU\…\CapabilityAccessManager\ConsentStore\webcam\MSTeams_8wekyb3d8bbwe = Deny`), `video-button`
   is disabled with an explanatory FullDescription – surface that as "unavailable".
 
+## Findings from the plugin smoke test (2026-11-09)
+
+- **Raise hand is a plain toggle.** Clicking `raisehands-button` raises/lowers the hand directly.
+  Its aria `expanded` (ExpandCollapse state) is `true` while the hand is up – a **language-independent**
+  state signal, used before the FullDescription patterns.
+- **Posted clicks work:** `WM_MOUSEMOVE/LBUTTONDOWN/LBUTTONUP` posted to the
+  `Chrome_RenderWidgetHostHWND` under the element toggle mic/camera/hand/share and open the
+  reaction/video/share flyouts; the new label is readable ~5 ms after the click returns.
+- **Sharing moves the toolbar:** while sharing, the meeting window is **minimized** and two extra
+  windows appear: `Kompakte Besprechungsansicht | …` (compact meeting view with mic/camera/share,
+  **no** `reaction-menu-button`, no `callingButtons-showMoreBtn`) and `Freigabesteuerungsleiste | Microsoft Teams`
+  (share control bar, has `share-button`). Clicking into the minimized window does nothing and its
+  labels may be stale – always prefer a non-minimized window with the toolbar.
+- After stopping the share, the compact window disappears and the meeting window is restored.
+- Reactions are not reachable while sharing (only the minimized meeting window has the button).
+- Camera toggle: `video-button` is briefly `disabled=true` while the device switches.
+
 ## Open points
 
 - English (and other) UI strings not yet measured on this machine – take them from the reference

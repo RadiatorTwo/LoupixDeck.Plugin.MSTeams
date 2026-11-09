@@ -3,6 +3,8 @@
   <PropertyGroup>
     <!-- Windows only: the plugin drives the Teams desktop client through UI Automation. -->
     <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- FlaUI references Windows Forms; this lets the Linux release CI build the plugin. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>default</LangVersion>

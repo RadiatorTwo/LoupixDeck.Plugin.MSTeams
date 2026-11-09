@@ -1,12 +1,12 @@
 {
   "id": "msteams",
-  "name": "MSTeams",
+  "name": "Microsoft Teams",
   "version": "1.0.0",
   "sdkVersion": "1.36",
   "entryAssembly": "LoupixDeck.Plugin.MSTeams.dll",
-  "platform": "All",
-  "author": "",
-  "description": "",
-  "projectUrl": "",
+  "platform": "Windows",
+  "author": "RadiatorTwo",
+  "description": "Control Microsoft Teams meetings (mic, camera, blur, reactions, raise hand, screen sharing, leave) with live state.",
+  "projectUrl": "https://github.com/RadiatorTwo/LoupixDeck.Plugin.MSTeams",
   "iconFile": ""
 }

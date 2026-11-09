@@ -1,0 +1,49 @@
+{
+  "$comment": [
+    "Teams desktop client (ms-teams.exe) UI Automation selectors.",
+    "AutomationIds are language independent; the state patterns match localized labels",
+    "(case-insensitive .NET regexes, every language in one list).",
+    "de: measured on Teams 26276.513.5241.9675 (2026-11-09), see NOTES-UIA.md.",
+    "en: mic/camera/share from danswett/streamdeck-teams-control (MIT); hand/blur/window-list unverified."
+  ],
+  "meetingProbeId": "microphone-button",
+  "fullToolbarId": "callingButtons-showMoreBtn",
+  "mic": {
+    "id": "microphone-button",
+    "source": "Name",
+    "activePatterns": [ "^\\s*unmute\\b", "stummschaltung\\b.*\\baufheben", "mikrofon\\s+(wieder\\s+)?(aktivieren|einschalten)" ],
+    "inactivePatterns": [ "^\\s*mute\\b", "stumm\\s*schalten", "mikrofon\\s+(deaktivieren|ausschalten)" ]
+  },
+  "camera": {
+    "id": "video-button",
+    "source": "Name",
+    "activePatterns": [ "camera\\s+off", "(kamera|video)\\s+(aus|deaktivieren)" ],
+    "inactivePatterns": [ "camera\\s+on", "(kamera|video)\\s+(ein|aktivieren)" ]
+  },
+  "hand": {
+    "id": "raisehands-button",
+    "source": "FullDescription",
+    "expandedMeansActive": true,
+    "activePatterns": [ "\\blower\\b", "\\bsenken\\b" ],
+    "inactivePatterns": [ "\\braise\\b", "\\bheben\\b" ]
+  },
+  "share": {
+    "id": "share-button",
+    "source": "Name",
+    "activePatterns": [ "stop\\s+(sharing|presenting)", "(teilen|freigabe|präsentation|präsentieren)\\s+beenden" ],
+    "inactivePatterns": [ "^\\s*share\\b", "^\\s*(teilen|freigeben)\\b(?!\\s+beenden)" ]
+  },
+  "hangupId": "hangup-button",
+  "reactionMenuId": "reaction-menu-button",
+  "reactions": {
+    "Like": "like-button",
+    "Love": "heart-button",
+    "Applause": "applause-button",
+    "Laugh": "laugh-button",
+    "Wow": "surprised-button"
+  },
+  "videoOptionsId": "video-button-configure",
+  "blurOnPatterns": [ "^\\s*standard\\s*blur\\s*$", "^\\s*standardunsch(ä|ae)rfe\\s*$" ],
+  "blurOffPatterns": [ "^\\s*no\\s+background\\s+effects?\\s*$", "^\\s*kein\\s+hintergrundeffekt\\s*$" ],
+  "shareWindowListPatterns": [ "\\bwindows?\\b", "\\bfenster\\b" ]
+}
